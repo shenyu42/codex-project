@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>馬卡龍心理測驗 Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: "#FFFDF5",
+            macaronBlue: "#A7D8F5",
+            macaronBlueDeep: "#8EC8EB",
+            macaronPink: "#FFC1CC",
+            lilac: "#DCCCF6",
+            mint: "#CDEEDC",
+            peach: "#FFE3D8",
+            ink: "#5E6F88"
+          },
+          boxShadow: {
+            glow: "0 18px 40px rgba(167, 216, 245, 0.22)",
+            card: "0 18px 50px rgba(116, 153, 192, 0.14)"
+          },
+          keyframes: {
+            floaty: {
+              "0%, 100%": { transform: "translateY(0px)" },
+              "50%": { transform: "translateY(-8px)" }
+            }
+          },
+          animation: {
+            floaty: "floaty 4s ease-in-out infinite"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(167, 216, 245, 0.38), transparent 28%),
+        radial-gradient(circle at top right, rgba(220, 204, 246, 0.24), transparent 24%),
+        radial-gradient(circle at bottom center, rgba(205, 238, 220, 0.26), transparent 30%),
+        #FFFDF5;
+    }
+    .view { display: none; animation: fadeUp 0.4s ease; }
+    .view.active { display: block; }
+    .glass { background: rgba(255,255,255,0.76); backdrop-filter: blur(12px); }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen text-ink selection:bg-macaronBlue/35">
+  <div class="relative overflow-hidden">
+    <header class="relative z-10">
+      <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 lg:px-8">
+        <button id="nav-home-button" class="rounded-full bg-white/85 px-5 py-3 text-sm font-semibold shadow-sm">Macaron Mind Studio</button>
+        <div class="hidden gap-3 md:flex">
+          <span class="rounded-full bg-white/80 px-4 py-2 text-sm shadow-sm">藍色馬卡龍首頁</span>
+          <span class="rounded-full bg-macaronBlue/20 px-4 py-2 text-sm shadow-sm">SPA Demo</span>
+        </div>
+      </div>
+    </header>
+    <main class="relative z-10 mx-auto max-w-7xl px-5 pb-12 lg:px-8">
+      <section id="home-view" class="view active">
+        <div class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+          <div class="glass rounded-[2.25rem] border border-white/70 p-7 shadow-card lg:p-10">
+            <div class="flex flex-wrap gap-3">
+              <span class="rounded-full bg-white px-4 py-2 text-sm shadow-sm">Blue Macaron Selection</span>
+              <span class="rounded-full bg-macaronBlue/20 px-4 py-2 text-sm shadow-sm">療癒系心理測驗</span>
+            </div>
+            <div class="mt-8 grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+              <div>
+                <h1 class="text-4xl font-bold leading-tight md:text-5xl">像一般網站那樣舒展的<span class="block text-macaronBlueDeep">馬卡龍心理測驗首頁</span></h1>
+                <p class="mt-5 max-w-2xl text-base leading-8 text-ink/80 md:text-lg">先選你想玩的主題，再進入各自的介紹、題目與分享卡片。桌面版用寬版分欄與卡片網格，手機版再自然收合，不再全部擠成一條直式長區塊。</p>
+                <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+                  <button id="hero-featured-button" class="rounded-full bg-gradient-to-r from-macaronBlueDeep to-macaronBlue px-7 py-4 text-base font-semibold text-white shadow-glow transition hover:scale-[1.02]">先玩本日推薦</button>
+                  <button id="hero-scroll-button" class="rounded-full bg-white px-7 py-4 text-base font-semibold shadow-sm transition hover:scale-[1.02]">看全部測驗</button>
+                </div>
+              </div>
+              <div class="grid gap-4">
+                <div class="rounded-[2rem] bg-gradient-to-br from-white via-macaronBlue/18 to-lilac/24 p-6 shadow-sm">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm text-ink/60">本日推薦</p>
+                      <h2 id="featured-title" class="mt-2 text-2xl font-bold"></h2>
+                    </div>
+                    <div id="featured-emoji" class="text-5xl animate-floaty"></div>
+                  </div>
+                  <p id="featured-subtitle" class="mt-4 text-sm leading-7 text-ink/72"></p>
+                  <button id="featured-button" class="mt-5 w-full rounded-full bg-white/90 px-5 py-3 text-sm font-semibold shadow-sm transition hover:scale-[1.02]">直接開始推薦測驗</button>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                  <div class="rounded-[1.6rem] bg-white/80 p-4 text-center shadow-sm"><p class="text-2xl">🩵</p><p class="mt-2 text-xs text-ink/60">藍色主視覺</p></div>
+                  <div class="rounded-[1.6rem] bg-white/80 p-4 text-center shadow-sm"><p class="text-2xl">🫧</p><p class="mt-2 text-xs text-ink/60">三題快速玩</p></div>
+                  <div class="rounded-[1.6rem] bg-white/80 p-4 text-center shadow-sm"><p class="text-2xl">📸</p><p class="mt-2 text-xs text-ink/60">分享小卡</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <aside class="space-y-6">
+            <div class="glass rounded-[2rem] border border-white/70 p-6 shadow-card">
+              <div class="flex items-center justify-between">
+                <h2 class="text-lg font-bold">依照心情快速進入</h2>
+                <span class="rounded-full bg-white/80 px-3 py-1 text-xs shadow-sm">Quick Bar</span>
+              </div>
+              <div id="mood-bar" class="mt-5 grid grid-cols-2 gap-3"></div>
+            </div>
+            <div class="glass rounded-[2rem] border border-white/70 p-6 shadow-card">
+              <h2 class="text-lg font-bold">這個 Demo 有什麼</h2>
+              <div class="mt-4 space-y-3">
+                <div class="rounded-[1.5rem] bg-white/80 px-4 py-4 text-sm leading-7 text-ink/72 shadow-sm">主頁先挑測驗，再進入各自流程。</div>
+                <div class="rounded-[1.5rem] bg-white/80 px-4 py-4 text-sm leading-7 text-ink/72 shadow-sm">每個測驗都是三題式單頁切換體驗。</div>
+                <div class="rounded-[1.5rem] bg-white/80 px-4 py-4 text-sm leading-7 text-ink/72 shadow-sm">結果頁保留精美的分享卡片區塊。</div>
+              </div>
+            </div>
+          </aside>
+        </div>
+        <section class="mt-8 glass rounded-[2.25rem] border border-white/70 p-7 shadow-card lg:p-8">
+          <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p class="text-sm text-ink/60">All Quizzes</p>
+              <h2 class="mt-2 text-3xl font-bold">挑一個你現在最想測的主題</h2>
+            </div>
+            <p class="max-w-xl text-sm leading-7 text-ink/70">下面改成正常的卡片網格區，桌面一次看得到多個主題，不再塞成單一長條區域。</p>
+          </div>
+          <div id="quiz-menu" class="mt-8 grid gap-5 lg:grid-cols-3"></div>
+        </section>
+      </section>
+
+      <section id="landing-view" class="view">
+        <div class="mx-auto max-w-5xl">
+          <div class="glass rounded-[2.25rem] border border-white/70 p-7 shadow-card lg:p-10">
+            <button id="back-home-button" class="rounded-full bg-white/85 px-5 py-3 text-sm font-semibold shadow-sm">← 回到測驗主頁</button>
+            <div class="mt-8 grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-center">
+              <div>
+                <span id="landing-badge" class="inline-flex rounded-full bg-white/90 px-4 py-2 text-sm shadow-sm"></span>
+                <h2 id="landing-title" class="mt-5 text-4xl font-bold leading-tight"></h2>
+                <p id="landing-subtitle" class="mt-5 max-w-2xl text-base leading-8 text-ink/76"></p>
+                <div class="mt-7 rounded-[1.8rem] bg-white/80 p-5 shadow-sm">
+                  <p class="text-sm text-ink/60">這份測驗會帶你看見</p>
+                  <p id="landing-description" class="mt-3 text-sm leading-7 text-ink/76"></p>
+                </div>
+                <button id="start-button" class="mt-8 rounded-full bg-gradient-to-r from-macaronBlueDeep via-macaronBlue to-lilac px-8 py-4 text-base font-semibold text-white shadow-glow transition hover:scale-[1.02]">開始測驗</button>
+              </div>
+              <div class="rounded-[2rem] bg-gradient-to-br from-white via-macaronBlue/20 to-lilac/24 p-8 text-center shadow-sm">
+                <div id="landing-emoji" class="mx-auto flex h-28 w-28 items-center justify-center rounded-full bg-white/90 text-6xl shadow-glow animate-floaty"></div>
+                <p class="mt-6 text-sm leading-7 text-ink/70">三題就能完成，適合做成展示用的心理測驗首頁流程，也方便你之後擴充更多主題。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="question-view" class="view">
+        <div class="mx-auto max-w-4xl">
+          <div class="glass rounded-[2.25rem] border border-white/70 p-7 shadow-card lg:p-10">
+            <button id="back-landing-button" class="rounded-full bg-white/85 px-5 py-3 text-sm font-semibold shadow-sm">← 返回介紹</button>
+            <div class="mt-8">
+              <div class="mb-4 flex items-center justify-between text-sm text-ink/68">
+                <span id="progress-label">測驗進度</span>
+                <span id="progress-text">1 / 3</span>
+              </div>
+              <div class="h-3 overflow-hidden rounded-full bg-white/85 shadow-inner">
+                <div id="progress-bar" class="h-full rounded-full bg-gradient-to-r from-macaronBlue via-lilac to-macaronPink transition-all duration-500"></div>
+              </div>
+            </div>
+            <div id="question-panel" class="mt-8">
+              <span id="question-badge" class="inline-flex rounded-full bg-peach/80 px-4 py-2 text-sm shadow-sm"></span>
+              <h2 id="question-title" class="mt-5 text-3xl font-bold leading-relaxed"></h2>
+              <div id="options-container" class="mt-8 grid gap-4"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="result-view" class="view">
+        <div class="mx-auto max-w-5xl">
+          <div class="glass rounded-[2.25rem] border border-white/70 p-7 shadow-card lg:p-10">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <button id="result-home-button" class="rounded-full bg-white/85 px-5 py-3 text-sm font-semibold shadow-sm">← 回到測驗主頁</button>
+              <span id="result-badge" class="rounded-full bg-mint/70 px-4 py-2 text-sm shadow-sm"></span>
+            </div>
+            <div class="mt-8 grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+              <div>
+                <h2 id="result-title" class="text-4xl font-bold leading-tight"></h2>
+                <p id="result-description" class="mt-5 text-base leading-8 text-ink/76"></p>
+                <p id="result-highlight" class="mt-5 rounded-[1.8rem] bg-white/82 px-5 py-5 text-sm leading-7 text-ink/80 shadow-sm"></p>
+                <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+                  <button id="restart-button" class="rounded-full bg-gradient-to-r from-macaronBlueDeep to-macaronBlue px-7 py-4 text-base font-semibold text-white shadow-card transition hover:scale-[1.02]">重新測驗</button>
+                  <button id="switch-quiz-button" class="rounded-full bg-white px-7 py-4 text-base font-semibold shadow-sm transition hover:scale-[1.02]">換一個心理測驗</button>
+                </div>
+              </div>
+              <div id="share-card" class="rounded-[2rem] border border-white/75 bg-gradient-to-br from-white via-macaronBlue/18 to-lilac/24 p-7 shadow-glow">
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <p id="share-caption" class="text-sm text-ink/58"></p>
+                    <h3 id="share-title" class="mt-2 text-3xl font-bold leading-snug"></h3>
+                  </div>
+                  <div id="share-emoji" class="text-5xl animate-floaty"></div>
+                </div>
+                <div class="mt-8 rounded-[1.6rem] bg-white/82 p-5 shadow-sm">
+                  <p class="text-sm tracking-[0.28em] text-ink/42">QUOTE</p>
+                  <p id="share-quote" class="mt-3 text-lg leading-8 text-ink/80"></p>
+                </div>
+                <div class="mt-6 flex items-center justify-between text-sm text-ink/55">
+                  <span>截圖分享你的專屬測驗結果</span>
+                  <span>Macaron Demo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        id: "soul-fragrance",
+        menuTitle: "靈魂專屬香氣",
+        menuSubtitle: "你在別人眼中散發什麼調性",
+        menuEmoji: "🌸",
+        menuGradient: "from-macaronBlue/45 via-white to-lilac/28",
+        introBadge: "Soul Fragrance Demo",
+        introTitle: "你的靈魂散發著哪種香氣？",
+        introSubtitle: "3 個情境選擇，測出你隱藏的迷人氣質與專屬調性。",
+        introDescription: "適合喜歡夢幻感、氣質分析與香味人格的人。每個選項都對應到不同香氣印象，最後會得到一張適合截圖分享的小卡。",
+        questionBadge: "香氣情境題",
+        resultBadge: "香氣結果",
+        shareCaption: "Soul Fragrance",
+        questions: [
+          { title: "悠閒的週末午後，陽光像奶油一樣輕輕灑下，你最想把自己放進哪個場景？", options: [{ text: "窩進木質書店角落，點一杯熱拿鐵，慢慢翻喜歡的小說。", result: "woody" }, { text: "去甜點咖啡廳和好友聊天，桌上一定要有草莓塔和氣泡飲。", result: "fruity" }, { text: "到有綠意的花園散步，讓風吹過髮梢，順便挑一束小花回家。", result: "herbal" }] },
+          { title: "當你突然收到一份精心準備的驚喜時，你的第一反應最像哪一種？", options: [{ text: "先安靜地看著那份心意，嘴角微微上揚，把感動藏進眼神裡。", result: "woody" }, { text: "立刻露出亮晶晶的笑容，忍不住抱住對方，整個人甜到發光。", result: "fruity" }, { text: "溫柔地說謝謝，細細記住每個小細節，想把這份溫暖收藏起來。", result: "herbal" }] },
+          { title: "如果今天要為自己挑一套最有氛圍感的穿搭，你會選哪種感覺？", options: [{ text: "奶茶色針織配低調飾品，像月光一樣柔和又有故事。", result: "woody" }, { text: "粉色洋裝或澎袖上衣，帶一點俏皮甜感，讓人忍不住多看兩眼。", result: "fruity" }, { text: "白襯衫配薄荷或淡紫色系單品，清新舒服，像剛醒來的春天。", result: "herbal" }] }
+        ],
+        resultsMap: {
+          woody: { title: "神祕慵懶的木質調", description: "你給人的感覺像午後光影落在木地板上，安靜、柔和，卻有讓人反覆回味的深度。你不急著討好世界，反而因為那份從容與留白，顯得格外迷人。越靠近你，越能感受到穩定與細膩交織出的高級氛圍。", highlight: "最吸引人的特質：你那種不張揚卻很有故事感的溫柔，總讓人想再多了解你一點。", quote: "你的香氣像靜靜發光的夜晚，溫柔沉穩，讓人一靠近就卸下防備。", emoji: "🪵" },
+          fruity: { title: "純真甜美的果香調", description: "你的存在像一顆剛成熟的蜜桃，輕盈、明亮，帶著令人心動的甜。你總能用自然的笑意和真誠的反應，把平凡時刻變得可愛又有光。和你相處的人，常常會被那股毫不費力的可愛療癒到。", highlight: "最吸引人的特質：你散發的親近感與少女感，會讓人不自覺想守護你的笑容。", quote: "你的香氣像晨光裡的果汁氣泡，甜而不膩，輕輕一碰就讓心情亮起來。", emoji: "🍓" },
+          herbal: { title: "清新溫柔的草本花香調", description: "你像清晨花園裡的一陣微風，乾淨、柔軟，帶著能安撫人心的力量。你擅長傾聽，也總能注意到別人忽略的小情緒，因此讓人覺得安心又被理解。你的魅力不是喧嘩，而是一種越相處越上癮的舒服。", highlight: "最吸引人的特質：你細膩又有療癒感的陪伴，總能讓人在你身邊慢慢放鬆下來。", quote: "你的香氣像春天剛甦醒的花葉，清透溫柔，悄悄把世界變得更舒服。", emoji: "🌿" }
+        }
+      },
+      {
+        id: "love-aura",
+        menuTitle: "戀愛氛圍感",
+        menuSubtitle: "你最容易讓人心動的瞬間",
+        menuEmoji: "💗",
+        menuGradient: "from-white via-macaronPink/30 to-lilac/25",
+        introBadge: "Love Aura Demo",
+        introTitle: "你最讓人心動的是哪種戀愛氛圍？",
+        introSubtitle: "3 個甜甜情境，測出你散發的是初戀感、反差感，還是安心陪伴感。",
+        introDescription: "這份測驗會從你的互動方式、心動反應與穿搭氣場，找出你在感情裡最迷人的那一道光。",
+        questionBadge: "戀愛情境題",
+        resultBadge: "戀愛氣場結果",
+        shareCaption: "Love Aura",
+        questions: [
+          { title: "如果和喜歡的人一起散步到夜晚，你最希望那一刻是什麼畫面？", options: [{ text: "路燈下慢慢聊天，氣氛溫柔得像只剩你們兩個人的世界。", result: "gentle" }, { text: "突然相視而笑，鬧著鬧著就有一種讓人心跳加速的可愛曖昧。", result: "spark" }, { text: "你明明看起來很淡定，卻在某個小細節裡默默照顧對方。", result: "contrast" }] },
+          { title: "如果對方說今天想到你，你會最自然地怎麼回應？", options: [{ text: "輕輕回一句「我也是」，簡單卻讓人覺得很真。", result: "gentle" }, { text: "先害羞一下，再用俏皮的語氣把心動藏進玩笑裡。", result: "spark" }, { text: "表面淡淡地接住，心裡其實已經偷偷記住這份偏愛。", result: "contrast" }] },
+          { title: "在約會穿搭上，你最偏愛哪種風格？", options: [{ text: "柔軟針織和淺色裙裝，乾淨舒服，像很值得依靠的擁抱。", result: "gentle" }, { text: "帶點亮眼細節的小洋裝或髮飾，一出場就讓人覺得你很甜。", result: "spark" }, { text: "俐落色調搭配一個精緻配件，低調卻有讓人記住的反差感。", result: "contrast" }] }
+        ],
+        resultsMap: {
+          gentle: { title: "讓人想靠近的安心陪伴感", description: "你在感情裡最動人的地方，是那種安靜卻很穩的溫柔。你不需要刻意製造張揚的存在感，光是自然陪在身邊，就會讓人覺得很放鬆、很安心。你的喜歡像燈光，不刺眼，卻會在心裡慢慢亮很久。", highlight: "最吸引人的特質：你的溫柔沒有壓力，卻總能在關鍵時刻給人剛剛好的安全感。", quote: "你不是最喧鬧的那束光，卻是最讓人想停下來靠近的月亮。", emoji: "🌙" },
+          spark: { title: "甜甜發光的初戀心動感", description: "你有一種會讓空氣突然變輕盈的魅力，像剛拆開的糖果紙，甜而不膩。你的笑容、語氣和反應都帶著自然的靈動感，讓人很容易在你身邊重新想起心動是什麼樣子。你總能把曖昧變得浪漫又可愛。", highlight: "最吸引人的特質：你那份帶著甜度的生命力，會讓人很想主動走近你。", quote: "你的心動氣場像草莓汽水，一打開就冒出細細亮亮的喜歡。", emoji: "💖" },
+          contrast: { title: "低調卻致命的反差吸引感", description: "你最讓人著迷的，是表面平靜、細節卻很撩人的反差感。你不一定是最先表達情緒的人，但總在不經意之間流露真心，反而更容易讓人陷進去。你的魅力像後勁，越相處越讓人無法忽略。", highlight: "最吸引人的特質：你把心動藏得剛剛好，讓每一次靠近都變得特別珍貴。", quote: "你的魅力不是一下子撞進來，而是慢慢滲進心裡，然後就住下來了。", emoji: "🖤" }
+        }
+      },
+      {
+        id: "healing-color",
+        menuTitle: "療癒能量色",
+        menuSubtitle: "最近的你需要哪一種溫柔",
+        menuEmoji: "🫧",
+        menuGradient: "from-mint/28 via-white to-macaronBlue/28",
+        introBadge: "Healing Color Demo",
+        introTitle: "最近的你，最需要哪一種療癒能量色？",
+        introSubtitle: "從你的日常習慣與放鬆方式，找到此刻最適合陪伴你的情緒色彩。",
+        introDescription: "如果你最近有點累、有點想被理解，這份小測驗會用柔和的情境題，幫你找到最適合此刻的安撫方式。",
+        questionBadge: "療癒情境題",
+        resultBadge: "能量色結果",
+        shareCaption: "Healing Color",
+        questions: [
+          { title: "當你結束忙碌的一天，最想用哪種方式把自己慢慢接住？", options: [{ text: "洗個熱水澡，點一盞小燈，讓整個房間安靜下來。", result: "lavender" }, { text: "買杯喜歡的飲料，到窗邊發呆，讓心情自己慢慢飄開。", result: "sky" }, { text: "整理桌面或房間，讓雜亂感一點點退去，心也跟著輕了。", result: "minty" }] },
+          { title: "如果今天只能留下一個讓你心情變好的小細節，你會選什麼？", options: [{ text: "一條柔軟毛毯和淡淡香氣，像被世界輕輕抱住。", result: "lavender" }, { text: "抬頭看到乾淨的天空，突然覺得一切都沒那麼急。", result: "sky" }, { text: "喝到冰涼清爽的水或茶，整個人瞬間變得很清醒。", result: "minty" }] },
+          { title: "最近的你，如果要用一種生活節奏形容，最接近哪一種？", options: [{ text: "想慢一點、柔一點，先好好照顧內心的小情緒。", result: "lavender" }, { text: "需要一點空氣感和自由感，讓心重新有伸展的空間。", result: "sky" }, { text: "想把腦袋清一清，重新整理狀態，再輕盈地出發。", result: "minty" }] }
+        ],
+        resultsMap: {
+          lavender: { title: "淡紫色的柔軟修復力", description: "最近的你需要的不是再更努力，而是被溫柔接住。淡紫色象徵著你此刻最需要的，是休息、安撫與內在平衡。當你允許自己慢下來，那些原本打結的情緒，反而會開始慢慢鬆開。", highlight: "最吸引人的特質：你有一種細膩的感受力，懂得把溫柔留給別人，也值得留給自己。", quote: "你的靈魂現在需要一朵淡紫色的雲，安安靜靜地把疲憊接住。", emoji: "💜" },
+          sky: { title: "天空藍的呼吸放鬆感", description: "你現在最需要的是空間感。天空藍像一口深呼吸，提醒你不用時時繃緊，也不用把每件事都扛得太滿。當你重新看見生活裡的留白，你會發現自己的心，其實比想像中更有彈性也更有光。", highlight: "最吸引人的特質：你即使疲憊，依然保有能讓周圍人舒展開來的輕盈感。", quote: "你需要的不是更多答案，而是一片能讓心慢慢變晴的天空藍。", emoji: "🩵" },
+          minty: { title: "薄荷綠的清新重整感", description: "你的狀態其實已經走到想重新整理、重新出發的節點了。薄荷綠代表清爽、秩序與恢復節奏的力量。你不是沒有能量，只是需要一點點整理與切換，好讓自己重新回到舒服而穩定的軌道上。", highlight: "最吸引人的特質：你總能在混亂裡慢慢找回清晰，讓自己和身邊的人都安心。", quote: "你的心現在適合一抹薄荷綠，把雜訊輕輕拂開，留下剛好的清新。", emoji: "🌿" }
+        }
+      }
+    ];
+
+    const moodShortcuts = [
+      { label: "想看氣質", emoji: "🌸", quizId: "soul-fragrance" },
+      { label: "想測心動", emoji: "💗", quizId: "love-aura" },
+      { label: "想被療癒", emoji: "🫧", quizId: "healing-color" },
+      { label: "快速三題", emoji: "☁️", quizId: "healing-color" }
+    ];
+
+    const views = {
+      home: document.getElementById("home-view"),
+      landing: document.getElementById("landing-view"),
+      question: document.getElementById("question-view"),
+      result: document.getElementById("result-view")
+    };
+    const selected = { quiz: null, index: 0, scores: {}, lock: false };
+
+    const els = {
+      navHomeButton: document.getElementById("nav-home-button"),
+      heroFeaturedButton: document.getElementById("hero-featured-button"),
+      heroScrollButton: document.getElementById("hero-scroll-button"),
+      featuredTitle: document.getElementById("featured-title"),
+      featuredSubtitle: document.getElementById("featured-subtitle"),
+      featuredEmoji: document.getElementById("featured-emoji"),
+      featuredButton: document.getElementById("featured-button"),
+      moodBar: document.getElementById("mood-bar"),
+      quizMenu: document.getElementById("quiz-menu"),
+      backHomeButton: document.getElementById("back-home-button"),
+      startButton: document.getElementById("start-button"),
+      backLandingButton: document.getElementById("back-landing-button"),
+      resultHomeButton: document.getElementById("result-home-button"),
+      restartButton: document.getElementById("restart-button"),
+      switchQuizButton: document.getElementById("switch-quiz-button"),
+      landingBadge: document.getElementById("landing-badge"),
+      landingTitle: document.getElementById("landing-title"),
+      landingSubtitle: document.getElementById("landing-subtitle"),
+      landingDescription: document.getElementById("landing-description"),
+      landingEmoji: document.getElementById("landing-emoji"),
+      progressLabel: document.getElementById("progress-label"),
+      progressText: document.getElementById("progress-text"),
+      progressBar: document.getElementById("progress-bar"),
+      questionBadge: document.getElementById("question-badge"),
+      questionTitle: document.getElementById("question-title"),
+      questionPanel: document.getElementById("question-panel"),
+      optionsContainer: document.getElementById("options-container"),
+      resultBadge: document.getElementById("result-badge"),
+      resultTitle: document.getElementById("result-title"),
+      resultDescription: document.getElementById("result-description"),
+      resultHighlight: document.getElementById("result-highlight"),
+      shareCaption: document.getElementById("share-caption"),
+      shareTitle: document.getElementById("share-title"),
+      shareQuote: document.getElementById("share-quote"),
+      shareEmoji: document.getElementById("share-emoji")
+    };
+
+    function showView(name) {
+      Object.entries(views).forEach(([key, node]) => node.classList.toggle("active", key === name));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function resetQuizState() {
+      selected.index = 0;
+      selected.lock = false;
+      selected.scores = {};
+      Object.keys(selected.quiz.resultsMap).forEach((key) => {
+        selected.scores[key] = 0;
+      });
+    }
+
+    function openQuizById(id) {
+      const target = quizData.find((quiz) => quiz.id === id);
+      if (!target) return;
+      selected.quiz = target;
+      resetQuizState();
+      renderLanding();
+      showView("landing");
+    }
+
+    function renderFeatured() {
+      const featuredQuiz = quizData[0];
+      els.featuredTitle.textContent = featuredQuiz.menuTitle;
+      els.featuredSubtitle.textContent = featuredQuiz.menuSubtitle;
+      els.featuredEmoji.textContent = featuredQuiz.menuEmoji;
+      els.featuredButton.onclick = () => openQuizById(featuredQuiz.id);
+      els.heroFeaturedButton.onclick = () => openQuizById(featuredQuiz.id);
+    }
+
+    function renderMoodBar() {
+      els.moodBar.innerHTML = "";
+      moodShortcuts.forEach((item) => {
+        const button = document.createElement("button");
+        button.className = "rounded-[1.5rem] bg-white/82 px-4 py-4 text-left shadow-sm transition hover:scale-[1.02] hover:bg-macaronBlue/10";
+        button.innerHTML = `<span class="text-2xl">${item.emoji}</span><span class="mt-2 block text-sm font-semibold">${item.label}</span>`;
+        button.addEventListener("click", () => openQuizById(item.quizId));
+        els.moodBar.appendChild(button);
+      });
+    }
+
+    function renderQuizMenu() {
+      els.quizMenu.innerHTML = "";
+      quizData.forEach((quiz) => {
+        const card = document.createElement("button");
+        card.className = `rounded-[2rem] border border-white/75 bg-gradient-to-br ${quiz.menuGradient} p-6 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-card`;
+        card.innerHTML = `<div class="flex items-start justify-between gap-4"><div><p class="text-sm text-ink/60">心理測驗</p><h3 class="mt-2 text-2xl font-bold">${quiz.menuTitle}</h3><p class="mt-3 text-sm leading-7 text-ink/72">${quiz.menuSubtitle}</p></div><div class="flex h-16 w-16 items-center justify-center rounded-full bg-white/85 text-3xl shadow-sm">${quiz.menuEmoji}</div></div><div class="mt-6 rounded-full bg-white/85 px-4 py-3 text-center text-sm font-semibold shadow-sm">進入這個測驗</div>`;
+        card.addEventListener("click", () => openQuizById(quiz.id));
+        els.quizMenu.appendChild(card);
+      });
+    }
+
+    function renderLanding() {
+      const quiz = selected.quiz;
+      els.landingBadge.textContent = quiz.introBadge;
+      els.landingTitle.textContent = quiz.introTitle;
+      els.landingSubtitle.textContent = quiz.introSubtitle;
+      els.landingDescription.textContent = quiz.introDescription;
+      els.landingEmoji.textContent = quiz.menuEmoji;
+    }
+
+    function renderQuestion() {
+      const quiz = selected.quiz;
+      const question = quiz.questions[selected.index];
+      els.progressLabel.textContent = `${quiz.menuTitle} 進度`;
+      els.progressText.textContent = `${selected.index + 1} / ${quiz.questions.length}`;
+      els.progressBar.style.width = `${((selected.index + 1) / quiz.questions.length) * 100}%`;
+      els.questionBadge.textContent = quiz.questionBadge;
+      els.questionTitle.textContent = question.title;
+      els.optionsContainer.innerHTML = "";
+      els.questionPanel.style.opacity = "1";
+      els.questionPanel.style.transform = "translateY(0)";
+
+      question.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.className = "w-full rounded-[1.8rem] border border-white/75 bg-white/88 px-5 py-5 text-left text-base leading-7 shadow-sm transition duration-300 hover:scale-[1.01] hover:bg-macaronBlue/10";
+        button.innerHTML = `<span class="mb-3 inline-flex rounded-full bg-gradient-to-r from-macaronBlue/18 to-lilac/24 px-3 py-1 text-sm text-ink/62">選項 ${index + 1}</span><span>${option.text}</span>`;
+        button.addEventListener("click", () => handleOptionSelect(button, option.result));
+        els.optionsContainer.appendChild(button);
+      });
+    }
+
+    function handleOptionSelect(button, resultKey) {
+      if (selected.lock) return;
+      selected.lock = true;
+      selected.scores[resultKey] += 1;
+      button.classList.remove("bg-white/88");
+      button.classList.add("bg-macaronBlue/28", "scale-[1.02]");
+
+      setTimeout(() => {
+        els.questionPanel.style.opacity = "0";
+        els.questionPanel.style.transform = "translateY(10px)";
+      }, 120);
+
+      setTimeout(() => {
+        selected.index += 1;
+        if (selected.index < selected.quiz.questions.length) {
+          renderQuestion();
+          selected.lock = false;
+        } else {
+          renderResult();
+          showView("result");
+          selected.lock = false;
+        }
+      }, 600);
+    }
+
+    function getTopResultKey() {
+      return Object.keys(selected.scores).reduce((bestKey, currentKey) => selected.scores[currentKey] > selected.scores[bestKey] ? currentKey : bestKey);
+    }
+
+    function renderResult() {
+      const result = selected.quiz.resultsMap[getTopResultKey()];
+      els.resultBadge.textContent = selected.quiz.resultBadge;
+      els.resultTitle.textContent = result.title;
+      els.resultDescription.textContent = result.description;
+      els.resultHighlight.textContent = result.highlight;
+      els.shareCaption.textContent = selected.quiz.shareCaption;
+      els.shareTitle.textContent = result.title;
+      els.shareQuote.textContent = result.quote;
+      els.shareEmoji.textContent = result.emoji;
+    }
+
+    els.navHomeButton.addEventListener("click", () => showView("home"));
+    els.heroScrollButton.addEventListener("click", () => els.quizMenu.scrollIntoView({ behavior: "smooth", block: "start" }));
+    els.backHomeButton.addEventListener("click", () => showView("home"));
+    els.startButton.addEventListener("click", () => { resetQuizState(); renderQuestion(); showView("question"); });
+    els.backLandingButton.addEventListener("click", () => showView("landing"));
+    els.resultHomeButton.addEventListener("click", () => showView("home"));
+    els.restartButton.addEventListener("click", () => { resetQuizState(); renderQuestion(); showView("question"); });
+    els.switchQuizButton.addEventListener("click", () => showView("home"));
+
+    renderFeatured();
+    renderMoodBar();
+    renderQuizMenu();
+  </script>
+</body>
+</html>
